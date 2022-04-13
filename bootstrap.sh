@@ -1,3 +1,11 @@
 #!/bin/bash
 
-librespot --name ${LIBRESPOT_DEVICE_NAME} -b 320 -u ${SPOTIFY_USERNAME} -p ${SPOTIFY_PASSWORD} -enable-volume-normalisation --initial-volume 75 --backend ${SPOTIFY_AUDIO_BACKEND}
+rm -rf /var/run
+mkdir -p /var/run/dbus
+
+dbus-uuidgen --ensure
+dbus-daemon --system
+
+avahi-daemon --daemonize --no-chroot
+
+/usr/bin/librespot "$@"
