@@ -23,8 +23,8 @@ FROM alpine:3.14
 RUN apk -U --no-cache add \
         libtool \
         libconfig-dev \
-		avahi-dev \
-		dbus
+	avahi-dev \
+	dbus
 COPY --from=build /root/target/release/librespot /usr/bin/librespot
 COPY bootstrap.sh /start
 RUN chmod +x /start
