@@ -15,7 +15,6 @@ RUN apk -U --no-cache add \
 	cargo 
 
 RUN cd /root \ 
-	&& ls -al /root \
 	&& mkdir -p ~/.cargo \
 	&& echo $'[net]\n\
 	git-fetch-with-cli = true\n'\
@@ -26,13 +25,19 @@ RUN cd /root \
 	&& git checkout tags/v0.4.1 \
 	&& cargo build --release --no-default-features --features "with-dns-sd"
 
+#RUN ls -al /root/git/target/release/ \
+#	&& halt 10
+
 FROM alpine:3.16
 RUN apk -U --no-cache add \
     libtool \
     libconfig-dev \
 	avahi-dev \
-	dbus
+	dbus 
+
 COPY --from=build /root/git/target/release/librespot /usr/bin/librespot
 COPY bootstrap.sh /start
-RUN chmod +x /start
+
+RUN chmod +x /start 
+
 ENTRYPOINT [ "/start" ]
