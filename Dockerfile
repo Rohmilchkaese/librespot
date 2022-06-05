@@ -22,7 +22,7 @@ RUN cd /root \
 	&& mkdir -p /root/git \
 	&& cd /root/git \
 	&& git clone https://github.com/librespot-org/librespot.git . \
-	&& git checkout tags/v0.4.1 \
+	&& git checkout tags/v0.4.0 \
 	&& cargo build --release --no-default-features --features "with-dns-sd"
 
 #RUN ls -al /root/git/target/release/ \
