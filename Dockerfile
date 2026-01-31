@@ -8,6 +8,7 @@ RUN apk -U --no-cache add \
 	libtool \
 	libdaemon-dev \
 	openssl-dev \
+	pkgconf \
 	libconfig-dev \
 	libstdc++ \
 	gcc \
@@ -23,7 +24,7 @@ RUN cd /root \
 	&& cd /root/git \
 	&& git clone https://github.com/librespot-org/librespot.git . \
 	&& git checkout tags/v0.8.0 \
-	&& cargo build --release --no-default-features --features "with-dns-sd"
+	&& cargo build --release --no-default-features --features "native-tls with-dns-sd"
 
 FROM alpine:3.21
 RUN apk -U --no-cache add \
