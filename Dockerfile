@@ -1,40 +1,19 @@
-FROM alpine:3.21 AS build
+FROM rust:alpine3.21 AS build
+
+ARG LIBRESPOT_VERSION=0.8.0
+
 RUN apk -U --no-cache add \
 	git \
-	build-base \
-	avahi-dev \
-	autoconf \
-	automake \
-	libtool \
-	libdaemon-dev \
-	openssl-dev \
-	libconfig-dev \
-	libstdc++ \
-	gcc \
-	rust \
-	cargo
+	build-base
 
-RUN cd /root \
-	&& mkdir -p ~/.cargo \
-	&& echo $'[net]\n\
-	git-fetch-with-cli = true\n'\
-	>> ~/.cargo/config.toml \
-	&& mkdir -p /root/git \
+RUN mkdir -p /root/git \
 	&& cd /root/git \
 	&& git clone https://github.com/librespot-org/librespot.git . \
-	&& git checkout tags/v0.8.0 \
-	&& cargo build --release --no-default-features --features "with-dns-sd"
+	&& git checkout tags/v${LIBRESPOT_VERSION} \
+	&& cargo build --release --no-default-features --features "with-libmdns,rustls-tls-webpki-roots"
 
 FROM alpine:3.21
-RUN apk -U --no-cache add \
-	libtool \
-	libconfig-dev \
-	avahi-dev \
-	dbus
 
 COPY --from=build /root/git/target/release/librespot /usr/bin/librespot
-COPY bootstrap.sh /start
 
-RUN chmod +x /start 
-
-ENTRYPOINT [ "/start" ]
+ENTRYPOINT [ "/usr/bin/librespot" ]
