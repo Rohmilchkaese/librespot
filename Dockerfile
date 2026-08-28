@@ -1,4 +1,4 @@
-FROM rust:alpine3.21 AS build
+FROM rust:alpine3.24 AS build
 
 ARG LIBRESPOT_VERSION=0.8.0
 
@@ -12,7 +12,7 @@ RUN mkdir -p /root/git \
 	&& git checkout tags/v${LIBRESPOT_VERSION} \
 	&& cargo build --release --no-default-features --features "with-libmdns,rustls-tls-webpki-roots"
 
-FROM alpine:3.21
+FROM alpine:3.24
 
 COPY --from=build /root/git/target/release/librespot /usr/bin/librespot
 
